@@ -27,7 +27,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common=0.99.22.9 \
     && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
     && apt-get update \
-    && apt-get install -y --no-install-recommends libstdc++6 \
+    && apt-get install -y --no-install-recommends \
+    libstdc++6 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
