@@ -58,8 +58,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./projectzomboid/server-files:/project-zomboid
-      - ./projectzomboid/server-data:/project-zomboid-config
+      - ./server-files:/project-zomboid
+      - ./server-data:/project-zomboid-config
 ```
 
 Then run:
