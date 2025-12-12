@@ -280,8 +280,3 @@ Contains functions that are used in the other scripts.
 Generates the server settings file from the .env file.
 Uses envsubst to replace the variables in the settings.ini.template file.
 
-#### configure-memory.sh
-
-Configures the JVM memory settings in ProjectZomboid64.json based on the
-MEMORY_XMX_GB and MEMORY_XMS_GB environment variables. Updates the -Xmx and -Xms
-JVM arguments, allowing dynamic memory allocation instead of being locked to 8GB.
