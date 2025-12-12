@@ -13,7 +13,7 @@ Eat lag for breakfast
 
 [Try our Project Zomboid Server hosting free for 2 days!](https://indifferentbroccoli.com/project-zomboid-server-hosting)
 
-# Project Zomboid Server Docker
+# Project Zomboid Server Docker (B42 Unstable Supported)
 
 > [!IMPORTANT]
 > Using Docker Desktop with WSL2 on Windows will result in a very slow download!
@@ -25,6 +25,11 @@ Eat lag for breakfast
 | CPU      | 4 cores | 4+ cores                                |
 | RAM      | 4GB     | Recommend over 8GB for stable operation |
 | Storage  | 5GB     | 10GB                                    |
+
+> [!NOTE]
+> **Build 42 Support**: To use Project Zomboid's latest Build 42 Unstable branch,
+> set `SERVER_BRANCH=unstable` in your .env file. Leave empty or unset for the
+> stable branch.
 
 ## How to use
 
@@ -147,6 +152,8 @@ It is highly recommended you set the following environment values before startin
 | KICK_FAST_PLAYERS                                 | false                                                                                         | Kick players that appear to be moving faster than is possible. May be buggy -- use with caution.                                                    |
 | SERVER_PLAYER_ID                                  | 88635698                                                                                      | ServerPlayerID determines if a character is from another server, or single player.                                                                  |
 | RCON_PORT                                         | 27015                                                                                         | The port for the RCON (Remote Console)                                                                                                              |
+| MEMORY_XMX_GB                                     | 8                                                                                             | Server maximum memory allocation in GB. Sets -Xmx in ProjectZomboid64.json                                                                         |
+| MEMORY_XMS_GB                                     |                                                                                               | Optional: Server initial memory allocation in GB. Sets -Xms in ProjectZomboid64.json. If not specified, only -Xmx is configured                  |
 | SERVER_BRANCH                                     | ""                                                                                            | Steam branch to install. Set to "unstable" for Build 42 Unstable branch, or leave empty for stable.                                                 |
 | DISCORD_ENABLE                                    | false                                                                                         | Enables global text chat integration with a Discord channel                                                                                         |
 | DISCORD_TOKEN                                     |                                                                                               | Discord bot access token                                                                                                                            |
@@ -272,3 +279,9 @@ Contains functions that are used in the other scripts.
 
 Generates the server settings file from the .env file.
 Uses envsubst to replace the variables in the settings.ini.template file.
+
+#### configure-memory.sh
+
+Configures the JVM memory settings in ProjectZomboid64.json based on the
+MEMORY_XMX_GB and MEMORY_XMS_GB environment variables. Updates the -Xmx and -Xms
+JVM arguments, allowing dynamic memory allocation instead of being locked to 8GB.

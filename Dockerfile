@@ -24,6 +24,7 @@ FROM cm2network/steamcmd:root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gettext-base=0.21-12 \
     procps=2:4.0.2-3 \
+    jq=1.6-2.1+deb12u1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -45,7 +46,9 @@ ENV HOME=/home/steam \
     STEAM_VAC=true \
     USE_STEAM=true \
     GENERATE_SETTINGS=true \
-    SERVER_BRANCH=""
+    SERVER_BRANCH="" \
+    MEMORY_XMX_GB=8 \
+    MEMORY_XMS_GB=""
 
 COPY ./scripts /home/steam/server/
 

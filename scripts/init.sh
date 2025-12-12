@@ -19,6 +19,9 @@ cat /branding
 
 install
 
+# Configure memory settings
+configure_memory
+
 # shellcheck disable=SC2317
 term_handler() {
     if ! shutdown_server; then
