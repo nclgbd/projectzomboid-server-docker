@@ -94,18 +94,26 @@ check_admin_password() {
 # Configure JVM memory settings in ProjectZomboid64.json
 configure_memory() {
     local json_file="/project-zomboid/ProjectZomboid64.json"
-    local memory_gb=${MEMORY_GB:-8}
-    
-    LogAction "Configuring memory settings to ${memory_gb}GB"
+    local memory_xmx_gb=${MEMORY_XMX_GB:-8}
+    local memory_xms_gb=${MEMORY_XMS_GB:-""}
     
     if [ ! -f "$json_file" ]; then
         LogError "ProjectZomboid64.json not found at $json_file"
         return 1
     fi
     
-    # Replace only -Xmx (maximum heap) with the configured memory
-    sed -i "s/-Xmx[0-9]*[mMgG]/-Xmx${memory_gb}G/g" "$json_file"
+    LogAction "Configuring memory settings to ${memory_xmx_gb}GB"
     
-    LogSuccess "Memory configured successfully to ${memory_gb}GB"
+    # Update Xmx
+    jq ".vmArgs |= map(if startswith(\"-Xmx\") then \"-Xmx${memory_xmx_gb}G\" else . end)" "$json_file" > "$json_file.tmp" && mv "$json_file.tmp" "$json_file"
+    
+    # Update or add Xms if specified
+    if [ -n "$memory_xms_gb" ]; then
+        jq ".vmArgs |= if (map(select(startswith(\"-Xms\"))) | length) > 0 then map(if startswith(\"-Xms\") then \"-Xms${memory_xms_gb}G\" else . end) else . + [\"-Xms${memory_xms_gb}G\"] end" "$json_file" > "$json_file.tmp" && mv "$json_file.tmp" "$json_file"
+        LogSuccess "Xmx: ${memory_xmx_gb}GB, Xms: ${memory_xms_gb}GB"
+    else
+        jq ".vmArgs |= map(select(startswith(\"-Xms\") | not))" "$json_file" > "$json_file.tmp" && mv "$json_file.tmp" "$json_file"
+        LogSuccess "Xmx: ${memory_xmx_gb}GB"
+    fi
     return 0
 }

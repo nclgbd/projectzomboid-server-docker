@@ -24,6 +24,7 @@ FROM cm2network/steamcmd:root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gettext-base=0.21-12 \
     procps=2:4.0.2-3 \
+    jq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -46,7 +47,8 @@ ENV HOME=/home/steam \
     USE_STEAM=true \
     GENERATE_SETTINGS=true \
     SERVER_BRANCH="" \
-    MEMORY_GB=8
+    MEMORY_XMX_GB=8 \
+    MEMORY_XMS_GB=""
 
 COPY ./scripts /home/steam/server/
 
