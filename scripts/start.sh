@@ -10,6 +10,10 @@ default:
   password: "${RCON_PASSWORD}"
 EOL
 
+# Enforce RCON password
+config_file="$CONFIG_DIR/Server/${SERVER_NAME}.ini"
+sed -i "s|RCONPassword=.*|RCONPassword=${RCON_PASSWORD}|" "$config_file"
+
 cd /project-zomboid || exit
 
 # if GENERATE_SETTINGS IS FALSE then we will not generate the settings

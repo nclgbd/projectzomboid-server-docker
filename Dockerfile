@@ -45,7 +45,8 @@ ENV HOME=/home/steam \
     STEAM_VAC=true \
     USE_STEAM=true \
     GENERATE_SETTINGS=true \
-    SERVER_BRANCH=""
+    SERVER_BRANCH="" \
+    MEMORY_GB=8
 
 COPY ./scripts /home/steam/server/
 

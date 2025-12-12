@@ -90,3 +90,22 @@ check_admin_password() {
         LogWarn "ADMIN_PASSWORD is not set or is insecure. Please set this in the environment variables."
     fi
 }
+
+# Configure JVM memory settings in ProjectZomboid64.json
+configure_memory() {
+    local json_file="/project-zomboid/ProjectZomboid64.json"
+    local memory_gb=${MEMORY_GB:-8}
+    
+    LogAction "Configuring memory settings to ${memory_gb}GB"
+    
+    if [ ! -f "$json_file" ]; then
+        LogError "ProjectZomboid64.json not found at $json_file"
+        return 1
+    fi
+    
+    # Replace only -Xmx (maximum heap) with the configured memory
+    sed -i "s/-Xmx[0-9]*[mMgG]/-Xmx${memory_gb}G/g" "$json_file"
+    
+    LogSuccess "Memory configured successfully to ${memory_gb}GB"
+    return 0
+}
