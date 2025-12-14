@@ -35,20 +35,20 @@ LABEL maintainer="support@indifferentbroccoli.com" \
       github="https://github.com/indifferentbroccoli/projectzomboid-server-docker" \
       dockerhub="https://hub.docker.com/r/indifferentbroccoli/projectzomboid-server-docker"
 
-ENV HOME=/home/steam \
-    CONFIG_DIR=/project-zomboid-config \
-    ADMIN_USERNAME=admin \
-    ADMIN_PASSWORD=admin \
-    DEFAULT_PORT=16261 \
-    UDP_PORT=16262 \
-    RCON_PORT=27015 \
-    SERVER_NAME=pzserver \
-    STEAM_VAC=true \
-    USE_STEAM=true \
-    GENERATE_SETTINGS=true \
-    SERVER_BRANCH="" \
-    MEMORY_XMX_GB=8 \
-    MEMORY_XMS_GB=""
+# ENV HOME=/home/steam \
+#     CONFIG_DIR=/project-zomboid-config \
+#     ADMIN_USERNAME=admin \
+#     ADMIN_PASSWORD=admin \
+#     DEFAULT_PORT=16261 \
+#     UDP_PORT=16262 \
+#     RCON_PORT=27015 \
+#     SERVER_NAME=pzserver \
+#     STEAM_VAC=true \
+#     USE_STEAM=true \
+#     GENERATE_SETTINGS=true \
+#     SERVER_BRANCH="" \
+#     MEMORY_XMX_GB=8 \
+#     MEMORY_XMS_GB=""
 
 COPY ./scripts /home/steam/server/
 

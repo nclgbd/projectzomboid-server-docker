@@ -10,9 +10,9 @@ services:
       - 16262:16262/udp
       - 27015:27015/tcp
     environment:
-      GENERATE_SETTINGS: true
+      GENERATE_SETTINGS: false
     env_file:
-      - .env.example
+      - .env
     volumes:
       - ./server-files:/project-zomboid
       - ./server-data:/project-zomboid-config
