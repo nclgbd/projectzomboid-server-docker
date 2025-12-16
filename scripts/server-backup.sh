@@ -1,0 +1,3 @@
+timestamp=$(date +"%y-%m-%d-%T")
+aws s3 cp server-data s3://pzserver-ratcord/backups/$timestamp/server-data --recursive
+aws s3 cp server-files s3://pzserver-ratcord/backups/$timestamp/server-files --recursive
