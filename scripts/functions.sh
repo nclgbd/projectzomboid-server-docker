@@ -44,7 +44,8 @@ install() {
   
   if [ -n "${SERVER_BRANCH}" ]; then
     LogInfo "Installing version: ${SERVER_BRANCH}"
-    /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install_version.scmd
+    envsubst < /home/steam/server/install_version.scmd > /tmp/install_version.scmd
+    /home/steam/steamcmd/steamcmd.sh +runscript /tmp/install_version.scmd
   else
     LogInfo "Installing stable branch"
     /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install.scmd
