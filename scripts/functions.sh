@@ -42,9 +42,9 @@ Log() {
 install() {
   LogAction "Starting server install"
   
-  if [ "${SERVER_BRANCH}" = "unstable" ]; then
-    LogInfo "Installing unstable branch"
-    /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install_unstable.scmd
+  if [ -n "${SERVER_BRANCH}" ]; then
+    LogInfo "Installing version: ${SERVER_BRANCH}"
+    /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install_version.scmd
   else
     LogInfo "Installing stable branch"
     /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install.scmd
