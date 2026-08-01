@@ -41,15 +41,26 @@ Log() {
 
 install() {
   LogAction "Starting server install"
-  
+
+  local args=(-app 380870 -dir /project-zomboid -validate)
+
   if [ -n "${SERVER_BRANCH}" ]; then
-    LogInfo "Installing version: ${SERVER_BRANCH}"
-    envsubst < /home/steam/server/install_version.scmd > /tmp/install_version.scmd
-    /home/steam/steamcmd/steamcmd.sh +runscript /tmp/install_version.scmd
+    LogInfo "Installing branch: ${SERVER_BRANCH}"
+    args+=(-branch "${SERVER_BRANCH}")
   else
     LogInfo "Installing stable branch"
-    /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install.scmd
   fi
+
+  if ! /depotdownloader/DepotDownloader "${args[@]}"; then
+    LogError "Failed to install server"
+    exit 1
+  fi
+
+  chmod +x /project-zomboid/start-server.sh /project-zomboid/ProjectZomboid64 2>/dev/null
+  find /project-zomboid/jre64/bin /project-zomboid/jre/bin \
+    -type f -exec chmod +x {} + 2>/dev/null
+
+  LogSuccess "Server install complete"
 }
 
 # rcon call
@@ -85,11 +96,48 @@ shutdown_server() {
     return "$return_val"
 }
 
+# Set or insert if missing
+set_ini_value() {
+    local file="$1"
+    local key="$2"
+    local value="$3"
+
+    if grep -q "^${key}=" "$file" 2>/dev/null; then
+        sed -i "s|^${key}=.*|${key}=${value}|" "$file"
+    else
+        echo "${key}=${value}" >> "$file"
+    fi
+}
+
 # Check if the admin password has been changed
 check_admin_password() {
     if [ -z "${ADMIN_PASSWORD}" ] ||  [ "${ADMIN_PASSWORD}" == "admin" ] || [ "${ADMIN_PASSWORD}" == "CHANGEME" ]; then
         LogWarn "ADMIN_PASSWORD is not set or is insecure. Please set this in the environment variables."
     fi
+}
+
+# Append extra JVM args from VM_ARGS into ProjectZomboid64.json
+configure_vm_args() {
+    if [ -z "${VM_ARGS}" ]; then
+        return 0
+    fi
+
+    local json_file="/project-zomboid/ProjectZomboid64.json"
+
+    if [ ! -f "$json_file" ]; then
+        LogError "ProjectZomboid64.json not found at $json_file"
+        return 1
+    fi
+
+    LogAction "Adding extra VM args"
+
+    local args_json
+    args_json=$(printf '%s' "${VM_ARGS}" | tr ',' '\n' | jq -R . | jq -s .)
+
+    jq --argjson extra "$args_json" '.vmArgs += $extra' "$json_file" > "$json_file.tmp" && mv "$json_file.tmp" "$json_file"
+
+    LogSuccess "VM args added: ${VM_ARGS}"
+    return 0
 }
 
 # Configure JVM memory settings in ProjectZomboid64.json

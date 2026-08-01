@@ -10,19 +10,19 @@ default:
   password: "${RCON_PASSWORD}"
 EOL
 
-# Enforce RCON password
 config_file="$CONFIG_DIR/Server/${SERVER_NAME}.ini"
-sed -i "s|RCONPassword=.*|RCONPassword=${RCON_PASSWORD}|" "$config_file"
+mkdir -p "$(dirname "$config_file")"
+touch "$config_file"
+
+set_ini_value "$config_file" DefaultPort "${DEFAULT_PORT}"
+set_ini_value "$config_file" UDPPort "${UDP_PORT}"
+set_ini_value "$config_file" RCONPort "${RCON_PORT}"
+set_ini_value "$config_file" RCONPassword "${RCON_PASSWORD}"
+if [ -n "${MAX_PLAYERS}" ]; then
+    set_ini_value "$config_file" MaxPlayers "${MAX_PLAYERS}"
+fi
 
 cd /project-zomboid || exit
-
-# if GENERATE_SETTINGS IS FALSE then we will not generate the settings
-if [ "$GENERATE_SETTINGS" = "true" ]; then
-  LogAction "Compiling settings"
-  /home/steam/server/compile-settings.sh
-elif [ "$GENERATE_SETTINGS" = "false" ]; then
-  LogWarn "GENERATE_SETTINGS=false, not overwriting settings"
-fi
 
 LogAction "Starting server"
 ./start-server.sh \
