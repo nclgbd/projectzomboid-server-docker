@@ -47,7 +47,11 @@ trap 'term_handler' SIGTERM
 check_admin_password
 
 # Start the server
-./start.sh &
+if [[ "$(id -u)" -eq 0 ]]; then
+    su steam -c ./start.sh &
+else
+    ./start.sh &
+fi
 
 # Process ID of su
 killpid="$!"

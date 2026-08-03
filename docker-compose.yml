@@ -1,7 +1,7 @@
 ---
 services:
   projectzomboid:
-    image: indifferentbroccoli/projectzomboid-server-docker:latest
+    build: .
     restart: unless-stopped
     container_name: projectzomboid
     stop_grace_period: 30s
@@ -12,5 +12,5 @@ services:
     env_file:
       - .env
     volumes:
-      - ./server-files:/project-zomboid
-      - ./server-data:/project-zomboid-config
+      - ./server-files:/project-zomboid:z
+      - ./server-data:/project-zomboid-config:z
