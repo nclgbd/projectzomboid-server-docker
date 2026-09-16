@@ -3,4 +3,5 @@ projectzomboid/
 .env
 server-data
 server-files
+server-saves
 *log*
